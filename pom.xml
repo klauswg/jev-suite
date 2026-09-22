@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.5</version>
+        <relativePath/>
+    </parent>
+    <groupId>com.jevsuite</groupId>
+    <artifactId>jev-suite</artifactId>
+    <version>0.1.0</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>jev-kit</module>
+        <module>jev-proof</module>
+    </modules>
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+</project>
