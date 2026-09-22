@@ -50,11 +50,12 @@ public class SubtitleFetcher {
                     "-o", videoId, "-P", tmp.toString(), videoUrl)
                     .redirectErrorStream(true)
                     .start();
-            String out = new String(p.getInputStream().readAllBytes());
-            if (!p.waitFor(60, TimeUnit.SECONDS)) {
+            String out;
+            if (!p.waitFor(90, TimeUnit.SECONDS)) {   // 先等退出再读输出，否则 readAllBytes 会无限阻塞
                 p.destroyForcibly();
                 throw new SubtitleException("yt-dlp timeout");
             }
+            out = new String(p.getInputStream().readAllBytes());
             List<Path> vtts;
             try (Stream<Path> s = Files.list(tmp)) {
                 vtts = s.filter(f -> f.toString().endsWith(".vtt"))

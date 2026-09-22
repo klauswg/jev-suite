@@ -41,23 +41,30 @@ public class ProofService {
     }
 
     public AcceptanceResult accept(Brief brief, String videoUrl) {
-        String runId = UUID.randomUUID().toString().substring(0, 8);
         List<SubtitleFetcher.Segment> segs;
         try {
             segs = SubtitleFetcher.merge(subs.fetch(videoUrl), 45);
         } catch (SubtitleFetcher.SubtitleException e) {
             log.warn("subtitle unavailable: {}", e.getMessage());
-            return new AcceptanceResult(runId, videoUrl, "UNVERIFIABLE", "unknown",
-                    null, List.of(), 0, false);
+            return new AcceptanceResult(UUID.randomUUID().toString().substring(0, 8), videoUrl,
+                    "UNVERIFIABLE", "unknown", null, List.of(), 0, false);
         }
 
+        return evaluateSegments(brief, videoUrl, segs);
+    }
+
+    /**
+     * 核心判定（public：eval 合成样本直接注入字幕段，绕开 yt-dlp）。
+     */
+    public AcceptanceResult evaluateSegments(Brief brief, String videoUrl, List<SubtitleFetcher.Segment> segs) {
+        String runId = UUID.randomUUID().toString().substring(0, 8);
         long tokens = 0;
         boolean degraded = false;
         List<AcceptanceResult.PointVerdict> verdicts = new ArrayList<>();
 
         // 1. 逐要点：粗筛证据段 → Noul 判定
         for (Brief.Point p : brief.points()) {
-            List<SubtitleFetcher.Segment> hits = roughMatch(p.text(), segs, 3);
+            List<SubtitleFetcher.Segment> hits = roughMatch(p.text(), segs, 5);
             String state = renderPointState(brief, p, hits);
             Map<String, Object> q = Map.of("point_fulfilled", Map.of(
                     "type", "noul",
@@ -142,7 +149,7 @@ public class ProofService {
         } else {
             for (SubtitleFetcher.Segment s : hits) {
                 sb.append("evidence[").append((int) s.startSec()).append("s]: ")
-                        .append(san.text(s.text(), 300)).append('\n');
+                        .append(san.text(s.text(), 600)).append('\n');
             }
         }
         return sb.toString();
