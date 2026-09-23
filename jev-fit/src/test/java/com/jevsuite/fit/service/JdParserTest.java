@@ -42,4 +42,27 @@ class JdParserTest {
         assertTrue(JdParser.parse(null).isEmpty());
         assertTrue(JdParser.parse("short\nlines\nonly").isEmpty());
     }
+
+    /** v0.1.1 回归：真实充提岗 JD——任职要求小节后 7 条全收（含无信号词的「具备 Owner 意识」）。 */
+    @Test
+    void requirementSectionCapturesSignalLessItems() {
+        String jd = """
+                岗位职责：
+                1. 负责充提业务后端系统的设计、开发与持续优化。
+                2. 与 Wallet、风控、合规等团队协作完成业务编排。
+                任职要求：
+                1. 5 年以上后端研发经验，具备扎实的后端开发及系统设计能力。
+                2. 有大所 CEX 充提业务研发经验优先。
+                3. 有钱包、资产、支付、清结算等资金相关系统研发经验优先。
+                4. 熟悉 Go / PHP 等至少一种后端技术栈。
+                5. 有大型系统重构、架构升级经验优先。
+                6. 具备 Owner 意识与跨团队项目推动能力。
+                7. 有 Travel Rule、AI Coding 实践经验优先。
+                """;
+        List<Requirement> reqs = JdParser.parse(jd);
+        assertEquals(7, reqs.size());
+        assertTrue(reqs.stream().anyMatch(r -> r.text().contains("Owner")));
+        assertTrue(reqs.get(0).mustHave());
+        assertFalse(reqs.get(1).mustHave());   // 优先 → nice-to-have
+    }
 }

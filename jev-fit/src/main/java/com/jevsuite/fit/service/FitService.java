@@ -98,9 +98,11 @@ public class FitService {
         try {
             JevResponse meta = jev.evaluate(renderMetaState(verdicts), Map.of(
                     "fit_band", Map.of("type", "score",
-                            "instructions", "Overall candidate-JD fit.",
-                            "criteria", List.of("poor: most must-haves unmet",
-                                    "weak: several gaps", "fair: minor gaps",
+                            "instructions", "Overall candidate-JD fit. Uncertain requirements are open "
+                                    + "questions, not gaps — do not count them as unmet.",
+                            "criteria", List.of("poor: core requirements unmet with no relevant evidence at all",
+                                    "weak: must-have gaps exist despite domain overlap",
+                                    "fair: minor gaps or mostly uncertain",
                                     "good: must-haves met", "excellent: exceeds requirements"))));
             tokens += meta.inputTokens();
             fitBand = ((Answer.ScoreAnswer) meta.answers().get("fit_band")).ordinal();
@@ -174,9 +176,11 @@ public class FitService {
     private String renderMetaState(List<FitReport.RequirementVerdict> vs) {
         long sat = vs.stream().filter(v -> "SATISFIED".equals(v.verdict())).count();
         long gap = vs.stream().filter(v -> "GAP".equals(v.verdict())).count();
+        long unc = vs.stream().filter(v -> "UNCERTAIN".equals(v.verdict())).count();
         long mustGap = vs.stream().filter(v -> v.mustHave() && "GAP".equals(v.verdict())).count();
+        // v0.1.1：uncertain 单列——缺失会让模型把存疑当缺口，整体档位系统性偏低
         return "Overall fit assessment.\nrequirements_total: " + vs.size()
-                + "\nsatisfied: " + sat + "\ngaps: " + gap
+                + "\nsatisfied: " + sat + "\ngaps: " + gap + "\nuncertain: " + unc
                 + "\nmust_have_gaps: " + mustGap + '\n';
     }
 
