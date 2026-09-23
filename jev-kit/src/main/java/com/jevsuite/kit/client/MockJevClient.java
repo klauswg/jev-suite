@@ -31,9 +31,12 @@ public class MockJevClient implements JevClient {
             switch (type) {
                 case "choice" -> {
                     Object criteria = m.get("criteria");
-                    String first = criteria instanceof Map<?, ?> cm && !cm.isEmpty()
-                            ? String.valueOf(cm.keySet().iterator().next()) : "unknown";
-                    out.put(q.getKey(), new Answer.ChoiceAnswer(first, 0.9));
+                    // 确定性：排序后取最后一项（Map.of 迭代顺序不保证，mock 必须可复现）
+                    String pick = criteria instanceof Map<?, ?> cm && !cm.isEmpty()
+                            ? cm.keySet().stream().map(String::valueOf).sorted()
+                                    .reduce((a, b) -> b).orElse("unknown")
+                            : "unknown";
+                    out.put(q.getKey(), new Answer.ChoiceAnswer(pick, 0.9));
                 }
                 case "score" -> out.put(q.getKey(), new Answer.ScoreAnswer(1, 5, 0.9));
                 case "noul" -> {

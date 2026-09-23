@@ -1,0 +1,18 @@
+server:
+  port: 8083
+  address: 127.0.0.1   # demo-only
+
+spring:
+  application:
+    name: jev-fidelity
+
+jev:
+  typesafe:
+    base-url: https://api.typesafe.ai/v1/systemone
+    api-key: ${TYPESAFE_API_KEY:}
+    model: ${JEV_MODEL:jev-latest}
+    timeout-ms: 8000
+
+logging:
+  level:
+    com.jevsuite: INFO
