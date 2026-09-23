@@ -1,0 +1,18 @@
+server:
+  port: 8084
+  address: 127.0.0.1   # demo-only；生产部署需前置鉴权
+
+spring:
+  application:
+    name: jev-rental
+
+jev:
+  typesafe:
+    base-url: https://api.typesafe.ai/v1/systemone
+    api-key: ${TYPESAFE_API_KEY:}
+    model: ${JEV_MODEL:jev-latest}
+    timeout-ms: 8000
+
+logging:
+  level:
+    com.jevsuite: INFO

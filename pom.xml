@@ -16,6 +16,7 @@
         <module>jev-proof</module>
         <module>jev-fit</module>
         <module>jev-fidelity</module>
+        <module>jev-rental</module>
     </modules>
     <properties>
         <java.version>17</java.version>

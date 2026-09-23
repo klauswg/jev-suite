@@ -13,7 +13,7 @@ Jev is a decision model that answers typed questions (score / choice / noul) ove
 | [jev-proof](jev-proof/) | Did the sponsored video actually deliver the brief? (creator content acceptance) | ✅ v0.1.0 — 60-sample calibration: gated pipeline 68/68 correct, 12 designed abstentions, 0/10 injection flips |
 | [jev-fit](jev-fit/) | Where does this candidate actually fall short of the job requirements? | ✅ v0.1.0 — 60-sample calibration: gated pipeline 115/115 correct, 5 designed abstentions, 0/20 injection flips |
 | jev-fidelity | Did the edit preserve the information in the original? | ✅ v0.1.0 — 55-sample/110-fact calibration: 91/92 gated judgments correct, 17 designed abstentions, 0/20 injection flips |
-| jev-rental | What must be confirmed with the listing agent before viewing? | 📋 PRD + dev plan done, implementation queued |
+| jev-rental | What must be confirmed with the listing agent before viewing? | ✅ v0.1.0 — 50-sample/178-claim calibration: gated 0.910 acc vs 0.854 raw, 0/10 injection flips |
 
 ## Shared kernel: jev-kit
 
