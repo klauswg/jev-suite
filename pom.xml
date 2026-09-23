@@ -14,6 +14,7 @@
     <modules>
         <module>jev-kit</module>
         <module>jev-proof</module>
+        <module>jev-fit</module>
     </modules>
     <properties>
         <java.version>17</java.version>
